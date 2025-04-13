@@ -1,15 +1,16 @@
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     static String[] spin ={"\uD83C\uDF49" , "\uD83C\uDF4B" , "\uD83D\uDD14" , "\uD83C\uDF4F"};
+    static int reward;
     public static void main(String[] args) throws InterruptedException {
         int balance = 1000 ;
         int bet;
-        int reward;
+
         Scanner sc = new Scanner(System.in);
-        Random random = new Random();
         System.out.println("Here is the slot machine , Let's play and earn rewards!");
         Thread.sleep(2000);
         System.out.print("Are you in ?(Y/N) :");
@@ -18,16 +19,20 @@ public class Main {
             System.out.println("Let's get started!\uD83D\uDE0A");
             Thread.sleep(2000);
             showSpin();
-            Thread.sleep(2000);
-            System.out.print("Place your bet: ");
-            bet = sc.nextInt();
-            if(bet < balance && bet > 0){
+            while(balance > 0){
+                Thread.sleep(2000);
+                System.out.print("Place your bet: ");
+                bet = sc.nextInt();
+                if(bet > balance || bet < 0){
+                    System.out.println("you can't bet a negative amount  or place a bet which exceeds your balance");
+                }
                 balance -= bet;
+                spin();
+                System.out.println("The remaining  balance : " + balance);
 
 
-            }
-            else{
-                System.out.println("you can't bet a negative amount  or place a bet which exceeds your balance");
+
+
             }
 
 
@@ -51,7 +56,37 @@ public class Main {
 
     }
     public static void spin(){
+        Random random = new Random();
+        String[] newSpin = new String[3];
+        for (int i = 0; i < 3; i++) {
+            newSpin[i] = spin[random.nextInt(spin.length)];
+        }
+        for(String s : newSpin){
+            System.out.print(s + " ");
+            System.out.println();
+        }
+        if (Objects.equals(newSpin[0], newSpin[1]) && Objects.equals(newSpin[1], newSpin[2])) {
+            System.out.println("*******");
+            System.out.println("you win");
+            System.out.println("*******");
+            reward +=  50;
+            System.out.println("reward: " + reward);
 
+
+        }
+        else if(Objects.equals(newSpin[0], newSpin[1]) || Objects.equals(newSpin[1], newSpin[2]) || Objects.equals(newSpin[0], newSpin[2])){
+            System.out.println("*******");
+            System.out.println("you almost win");
+            System.out.println("*******");
+            reward +=  20;
+            System.out.println("reward: " + reward);
+        }
+        else{
+            System.out.println("*******");
+            System.out.println("you lost");
+            System.out.println("*******");
+
+        }
 
     }
 }
